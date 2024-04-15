@@ -85,6 +85,14 @@ declare(features, "visuals", {
 			["enabled"] = true,
 			["color"] = Color3.fromRGB(0, 0, 0),
 		},
+	},
+    ["weapon"] = {
+		["enabled"] = true,
+		["color"] = Color3.fromRGB(255, 255, 255),
+		["outline"] = {
+			["enabled"] = true,
+			["color"] = Color3.fromRGB(0, 0, 0),
+		},
 	}
 })
 
@@ -109,6 +117,7 @@ local Boxes = {
 	Names = Tabs.Visuals:AddLeftGroupbox("names"),
 	Health = Tabs.Visuals:AddRightGroupbox("health"),
 	Distance = Tabs.Visuals:AddLeftGroupbox("distance"),
+    Weapon = Tabs.Visuals:AddRightGroupbox("weapon"),
 	Menu   = Tabs.Settings:AddLeftGroupbox("menu"),
 }
 
@@ -335,6 +344,38 @@ end)
 
 Options.DistanceOutlineColor:OnChanged(function()
 	visuals.distance.outline.color = Options.DistanceOutlineColor.Value
+end)
+
+Boxes.Weapon:AddToggle("Weapon", {
+	Text = "enabled",
+	Default = false,
+}):AddColorPicker("WeaponColor", {
+	Default = Color3.fromRGB(255, 255, 255),
+	Title = "weapon color",
+})
+
+Toggles.Weapon:OnChanged(function()
+	visuals.weapon.enabled = Toggles.Weapon.Value
+end)
+
+Options.WeaponColor:OnChanged(function()
+	visuals.weapon.color = Options.WeaponColor.Value
+end)
+
+Boxes.Weapon:AddToggle("WeaponOutline", {
+	Text = "outline",
+	Default = false,
+}):AddColorPicker("WeaponOutlineColor", {
+	Default = Color3.fromRGB(0, 0, 0),
+	Title = "weapon color",
+})
+
+Toggles.WeaponOutline:OnChanged(function()
+	visuals.weapon.outline.enabled = Toggles.WeaponOutline.Value
+end)
+
+Options.WeaponOutlineColor:OnChanged(function()
+	visuals.weapon.outline.color = Options.WeaponOutlineColor.Value
 end)
 
 Boxes.Menu:AddLabel("hide keybind"):AddKeyPicker("Hide", { Default = "KeypadOne", NoUI = true }); Library.ToggleKeybind = Options.Hide
