@@ -165,12 +165,7 @@ get("player").update = function(self, character, data)
 		data.distance = (client.Character.HumanoidRootPart.CFrame.Position - root.CFrame.Position).Magnitude
 	end
 
-	local function getWeapon()
-		local success, weapon = pcall(function()
-			return character:FindFirstChildWhichIsA("Tool")
-		end)
-		if success and weapon then return weapon.Name end
-	end
+	local weapon = character:FindFirstChildWhichIsA("Tool") or "none"
 
 	task.spawn(function()
 		local position, visible = camera:WorldToViewportPoint(root.CFrame.Position)
@@ -247,7 +242,7 @@ get("player").update = function(self, character, data)
 			drawings.distance.Outline = visuals.distance.outline.enabled
 			drawings.distance.OutlineColor = visuals.distance.outline.color
 			
-			drawings.weapon.Text = `[ {getWeapon() or "none"} ]`
+			drawings.weapon.Text = `[ {weapon} ]`
 			drawings.weapon.Size = math.max(math.min(math.abs(11 * scale), 11), 10)
 			drawings.weapon.Position = visuals.distance.enabled and Vector2.new(drawings.distance.Position.x, drawings.distance.Position.Y + (drawings.weapon.TextBounds.Y * 0.75)) or drawings.distance.Position
 			drawings.weapon.Color = color(visuals.weapon.color)
