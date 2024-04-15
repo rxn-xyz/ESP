@@ -109,11 +109,12 @@ get("player").new = function(self, player)
 				["box"] = get("new").drawing("Square", { Visible = false }),
 				["boxFilled"] = get("new").drawing("Square", { Visible = false, Filled = true }),
 				["boxOutline"] = get("new").drawing("Square", { Visible = false }),
-				["name"] = get("new").drawing("Text", { Visible = false, Center = true, Font = 3 }),
+				["name"] = get("new").drawing("Text", { Visible = false, Center = true}),
 				["health"] = get("new").drawing("Line", { Visible = false }),
 				["healthOutline"] = get("new").drawing("Line", { Visible = false }),
-				["healthText"] = get("new").drawing("Text", { Visible = false, Center = false, Font = 3 }),
-				["distance"] = get("new").drawing("Text", { Visible = false, Center = true, Font = 3 }),
+				["healthText"] = get("new").drawing("Text", { Visible = false, Center = false}),
+				["distance"] = get("new").drawing("Text", { Visible = false, Center = true}),
+                		["weapon"] = get("new").drawing("Text", { Visible = false, Center = true}),
 			}
 		}
 	end
@@ -164,6 +165,13 @@ get("player").update = function(self, character, data)
 		data.distance = (client.Character.HumanoidRootPart.CFrame.Position - root.CFrame.Position).Magnitude
 	end
 
+    local function getWeapon()
+        local success, weapon = pcall(function()
+            return character:FindFirstChildWhichIsA("Tool")
+        end)
+        if success and weapon then return weapon.Name end
+    end
+
 	task.spawn(function()
 		local position, visible = camera:WorldToViewportPoint(root.CFrame.Position)
 
@@ -173,7 +181,7 @@ get("player").update = function(self, character, data)
 			local team; if visuals.teamCheck then team = player.Team ~= client.Team else team = true end
 			return visuals.enabled and data.distance and data.distance <= visuals.renderDistance and team
 		end
-        
+
         local function color(color)
             if visuals.teamColor then
                 color = player.TeamColor.Color
@@ -232,12 +240,19 @@ get("player").update = function(self, character, data)
 
 			drawings.healthOutline.ZIndex = drawings.health.ZIndex - 1
 
-			drawings.distance.Text = data.distance and `[ {math.floor(data.distance)} ]` or nil
+			drawings.distance.Text = `[ {math.floor(data.distance)} ]`
 			drawings.distance.Size = math.max(math.min(math.abs(11 * scale), 11), 10)
-			drawings.distance.Position = Vector2.new(x, (yPostion + height) + (drawings.name.TextBounds.Y * 0.25))
+			drawings.distance.Position = Vector2.new(x, (yPostion + height) + (drawings.distance.TextBounds.Y * 0.25))
 			drawings.distance.Color = color(visuals.distance.color)
 			drawings.distance.Outline = visuals.distance.outline.enabled
 			drawings.distance.OutlineColor = visuals.distance.outline.color
+            
+            drawings.weapon.Text = `[ {getWeapon() or "none"} ]`
+			drawings.weapon.Size = math.max(math.min(math.abs(11 * scale), 11), 10)
+			drawings.weapon.Position = visuals.distance.enabled and Vector2.new(drawings.distance.Position.x, drawings.distance.Position.Y + (drawings.weapon.TextBounds.Y * 0.75)) or drawings.distance.Position
+			drawings.weapon.Color = color(visuals.weapon.color)
+			drawings.weapon.Outline = visuals.weapon.outline.enabled
+			drawings.weapon.OutlineColor = visuals.weapon.outline.color
 		end
 
 		drawings.box.Visible = (check() and visible and visuals.boxes.enabled)
@@ -248,6 +263,7 @@ get("player").update = function(self, character, data)
 		drawings.healthOutline.Visible = (check() and drawings.health.Visible and visuals.health.outline.enabled)
 		drawings.healthText.Visible = (check() and drawings.health.Visible and visuals.health.text.enabled)
 		drawings.distance.Visible = (check() and visible and visuals.distance.enabled)
+        drawings.weapon.Visible = (check() and visible and visuals.weapon.enabled)
 	end)
 end
 
@@ -318,6 +334,14 @@ declare(features, "visuals", {
 		}
 	},
 	["distance"] = {
+		["enabled"] = true,
+		["color"] = Color3.fromRGB(255, 255, 255),
+		["outline"] = {
+			["enabled"] = true,
+			["color"] = Color3.fromRGB(0, 0, 0),
+		},
+	},
+    ["weapon"] = {
 		["enabled"] = true,
 		["color"] = Color3.fromRGB(255, 255, 255),
 		["outline"] = {
