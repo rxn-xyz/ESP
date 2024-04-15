@@ -114,7 +114,7 @@ get("player").new = function(self, player)
 				["healthOutline"] = get("new").drawing("Line", { Visible = false }),
 				["healthText"] = get("new").drawing("Text", { Visible = false, Center = false}),
 				["distance"] = get("new").drawing("Text", { Visible = false, Center = true}),
-                		["weapon"] = get("new").drawing("Text", { Visible = false, Center = true}),
+				["weapon"] = get("new").drawing("Text", { Visible = false, Center = true}),
 			}
 		}
 	end
@@ -165,12 +165,12 @@ get("player").update = function(self, character, data)
 		data.distance = (client.Character.HumanoidRootPart.CFrame.Position - root.CFrame.Position).Magnitude
 	end
 
-    local function getWeapon()
-        local success, weapon = pcall(function()
-            return character:FindFirstChildWhichIsA("Tool")
-        end)
-        if success and weapon then return weapon.Name end
-    end
+	local function getWeapon()
+		local success, weapon = pcall(function()
+			return character:FindFirstChildWhichIsA("Tool")
+		end)
+		if success and weapon then return weapon.Name end
+	end
 
 	task.spawn(function()
 		local position, visible = camera:WorldToViewportPoint(root.CFrame.Position)
@@ -182,12 +182,12 @@ get("player").update = function(self, character, data)
 			return visuals.enabled and data.distance and data.distance <= visuals.renderDistance and team
 		end
 
-        local function color(color)
-            if visuals.teamColor then
-                color = player.TeamColor.Color
-            end
-            return color
-        end
+		local function color(color)
+			if visuals.teamColor then
+				color = player.TeamColor.Color
+			end
+			return color
+		end
 
 		if visible and check() then
 			local scale = 1 / (position.Z * math.tan(math.rad(camera.FieldOfView * 0.5)) * 2) * 1000
@@ -234,7 +234,7 @@ get("player").update = function(self, character, data)
 			drawings.health.Color = visuals.health.colorLow:Lerp(visuals.health.color, healthPercent * 0.01)
 			drawings.healthOutline.Color = visuals.health.outline.color
 			drawings.healthOutline.Thickness = 3
-            drawings.healthText.Color = drawings.health.Color
+			drawings.healthText.Color = drawings.health.Color
 			drawings.healthText.Outline = visuals.health.text.outline.enabled
 			drawings.healthText.OutlineColor = visuals.health.outline.color
 
@@ -246,8 +246,8 @@ get("player").update = function(self, character, data)
 			drawings.distance.Color = color(visuals.distance.color)
 			drawings.distance.Outline = visuals.distance.outline.enabled
 			drawings.distance.OutlineColor = visuals.distance.outline.color
-            
-            drawings.weapon.Text = `[ {getWeapon() or "none"} ]`
+			
+			drawings.weapon.Text = `[ {getWeapon() or "none"} ]`
 			drawings.weapon.Size = math.max(math.min(math.abs(11 * scale), 11), 10)
 			drawings.weapon.Position = visuals.distance.enabled and Vector2.new(drawings.distance.Position.x, drawings.distance.Position.Y + (drawings.weapon.TextBounds.Y * 0.75)) or drawings.distance.Position
 			drawings.weapon.Color = color(visuals.weapon.color)
@@ -263,7 +263,7 @@ get("player").update = function(self, character, data)
 		drawings.healthOutline.Visible = (check() and drawings.health.Visible and visuals.health.outline.enabled)
 		drawings.healthText.Visible = (check() and drawings.health.Visible and visuals.health.text.enabled)
 		drawings.distance.Visible = (check() and visible and visuals.distance.enabled)
-        drawings.weapon.Visible = (check() and visible and visuals.weapon.enabled)
+		drawings.weapon.Visible = (check() and visible and visuals.weapon.enabled)
 	end)
 end
 
@@ -294,7 +294,7 @@ end
 declare(features, "visuals", {
 	["enabled"] = true,
 	["teamCheck"] = false,
-    ["teamColor"] = true,
+	["teamColor"] = true,
 	["renderDistance"] = 2000,
 
 	["boxes"] = {
@@ -341,7 +341,7 @@ declare(features, "visuals", {
 			["color"] = Color3.fromRGB(0, 0, 0),
 		},
 	},
-    ["weapon"] = {
+	["weapon"] = {
 		["enabled"] = true,
 		["color"] = Color3.fromRGB(255, 255, 255),
 		["outline"] = {
